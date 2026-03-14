@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/:match*",
+      "destination": "https://<your-render-app-url>.onrender.com/api/:match*"
+    }
+  ]
+}

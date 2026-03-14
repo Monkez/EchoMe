@@ -1,0 +1,16 @@
+"""
+TalkToMe Requirements.txt - Backend Dependencies
+"""
+
+Flask==2.3.2
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.0.5
+SQLAlchemy==2.0.19
+python-dotenv==1.0.0
+anthropic==0.7.0
+werkzeug==2.3.6
+PyJWT==2.8.0
+python-dateutil==2.8.2
+gunicorn==21.2.0
+psycopg2-binary==2.9.6
+redis==5.0.0

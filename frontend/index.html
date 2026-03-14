@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoMe - Lắng nghe tiếng nói thật</title>
+  <meta name="description" content="Nền tảng thu thập góp ý ẩn danh cho mọi tổ chức, nhóm, cộng đồng. Lắng nghe tiếng nói thật, phân tích bằng AI.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Navbar -->
+<nav class="navbar hidden" id="navbar">
+  <div class="navbar-inner">
+    <div class="navbar-brand" onclick="state.user ? navigate('dashboard') : navigate('landing')">
+      <img src="assets/logo.png" alt="EchoMe Logo" style="height: 28px; width: 28px; vertical-align: middle; margin-right: 8px; border-radius: 6px;"> EchoMe
+    </div>
+    <div class="navbar-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển chế độ sáng/tối" id="theme-btn">🌙</button>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('feedback')" title="Gửi góp ý">📝 Góp ý</button>
+      <div id="nav-user-section" class="hidden">
+        <div class="navbar-user">
+          <div class="navbar-avatar" id="nav-avatar">A</div>
+          <span id="nav-username">User</span>
+          <button class="btn btn-ghost btn-sm" onclick="logout()" style="padding:4px 8px;font-size:11px">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== PAGE: LANDING ==================== -->
+<div id="page-landing" class="page landing">
+  <div class="hero">
+    <div class="hero-content slide-up">
+      <div class="hero-badge">✨ Nền tảng góp ý ẩn danh thông minh</div>
+      <h1>Lắng nghe tiếng nói thật</h1>
+      <p>Thu thập góp ý ẩn danh từ thành viên trong nhóm, tổ chức hay cộng đồng của bạn. AI tổng hợp và phân tích — không ai đọc trực tiếp, chỉ nhận insight giá trị.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="navigate('login')">🚀 Bắt đầu ngay</button>
+        <button class="btn btn-secondary btn-lg" onclick="navigate('feedback')">📝 Gửi góp ý</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="card feature-card slide-up" style="animation-delay:0.1s">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Ẩn danh tuyệt đối</div>
+          <div class="feature-desc">Không lưu IP, không theo dõi, không nhận dạng. Ai cũng có thể an tâm chia sẻ thẳng thắn.</div>
+        </div>
+        <div class="card feature-card slide-up" style="animation-delay:0.2s">
+          <div class="feature-icon">🤖</div>
+          <div class="feature-title">AI phân tích thông minh</div>
+          <div class="feature-desc">Tổng hợp, đánh giá cảm xúc, lọc nội dung không phù hợp, đưa ra insight hữu ích cho người tạo.</div>
+        </div>
+        <div class="card feature-card slide-up" style="animation-delay:0.3s">
+          <div class="feature-icon">📊</div>
+          <div class="feature-title">Dashboard trực quan</div>
+          <div class="feature-desc">Biểu đồ xu hướng, độ hài lòng, chủ đề nổi bật. Theo dõi tâm tư theo thời gian.</div>
+        </div>
+        <div class="card feature-card slide-up" style="animation-delay:0.4s">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">Bảo vệ cả hai phía</div>
+          <div class="feature-desc">Người tạo không đọc trực tiếp. Lọc góp ý ghen ghét, công kích. Chỉ giữ lại insight giá trị.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: LOGIN ==================== -->
+<div id="page-login" class="page hidden auth-page">
+  <div class="auth-card">
+    <div class="card">
+      <div class="auth-title">🔐 Đăng nhập</div>
+      <div class="auth-subtitle">Dành cho người tạo phiên góp ý</div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="login-email" type="email" placeholder="email@company.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <input class="form-input" id="login-password" type="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">🔐 Đăng nhập</button>
+      </form>
+      <div class="auth-toggle">Chưa có tài khoản? <a onclick="navigate('register')">Đăng ký ngay</a></div>
+      <div style="margin-top:16px;text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="navigate('feedback')">📝 Tôi muốn gửi góp ý</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: REGISTER ==================== -->
+<div id="page-register" class="page hidden auth-page">
+  <div class="auth-card">
+    <div class="card">
+      <div class="auth-title">✨ Tạo tài khoản</div>
+      <div class="auth-subtitle">Bắt đầu lắng nghe tiếng nói thật</div>
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label class="form-label">Họ tên</label>
+          <input class="form-input" id="reg-name" type="text" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="reg-email" type="email" placeholder="email@company.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tổ chức / Nhóm</label>
+          <input class="form-input" id="reg-company" type="text" placeholder="Tên tổ chức / nhóm / cộng đồng">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <input class="form-input" id="reg-password" type="password" placeholder="Ít nhất 6 ký tự" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">✨ Tạo tài khoản</button>
+      </form>
+      <div class="auth-toggle">Đã có tài khoản? <a onclick="navigate('login')">Đăng nhập</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: DASHBOARD ==================== -->
+<div id="page-dashboard" class="page hidden">
+  <div class="container dashboard">
+    <div class="dashboard-header">
+      <div>
+        <div class="dashboard-title">📋 Dashboard</div>
+        <div class="dashboard-subtitle">Quản lý các phiên thu thập góp ý</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="openCreateModal()">➕ Tạo phiên mới</button>
+        <button class="btn btn-secondary btn-sm" onclick="seedDemo()" title="Tạo dữ liệu mẫu">🎲 Demo</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <div class="stat-label">Tổng phiên</div>
+        <div class="stat-value" id="stat-sessions">0</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-label">Đang mở</div>
+        <div class="stat-value" style="color:var(--success)" id="stat-active">0</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-label">Tổng góp ý</div>
+        <div class="stat-value" id="stat-feedbacks">0</div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-label">Tỷ lệ tích cực</div>
+        <div class="stat-value" style="color:var(--accent-light)" id="stat-positive">—</div>
+      </div>
+    </div>
+
+    <div class="sessions-grid" id="sessions-grid"></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: ANALYTICS ==================== -->
+<div id="page-analytics" class="page hidden">
+  <div class="container analytics">
+    <div class="analytics-back" onclick="navigate('dashboard')">← Quay lại Dashboard</div>
+    <div id="analytics-content"></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE: FEEDBACK ==================== -->
+<div id="page-feedback" class="page hidden feedback-page">
+  <div class="feedback-card">
+    <div class="card">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:36px;margin-bottom:8px">💬</div>
+        <h2 style="font-size:22px;font-weight:800">Gửi góp ý ẩn danh</h2>
+        <p style="font-size:13px;color:var(--text-secondary);margin-top:4px">Chia sẻ thẳng thắn, không ai biết bạn là ai</p>
+      </div>
+      <div id="fb-form-wrapper">
+        <div class="form-group">
+          <label class="form-label">Mã góp ý (UID)</label>
+          <input class="form-input" id="fb-uid" type="text" placeholder="Nhập mã UID bạn nhận được..." oninput="validateFeedbackCode()" maxlength="12" style="text-transform:uppercase;letter-spacing:3px;font-weight:700;font-size:18px;text-align:center">
+        </div>
+        <div id="fb-session-info" style="margin-bottom:16px"></div>
+        <div id="fb-form-section" class="hidden">
+          <form onsubmit="handleSubmitFeedback(event)">
+            <div class="form-group">
+              <label class="form-label">Nội dung góp ý</label>
+              <textarea class="form-textarea" id="fb-content" placeholder="Hãy chia sẻ thẳng thắn suy nghĩ của bạn...&#10;&#10;Góp ý của bạn hoàn toàn ẩn danh. Không ai biết bạn là ai." required minlength="10" rows="6"></textarea>
+            </div>
+            <div style="background:var(--bg-glass);padding:12px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:8px">
+              🔒 Hoàn toàn ẩn danh • Không lưu IP • Không theo dõi • Người tạo không đọc trực tiếp
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">📨 Gửi góp ý ẩn danh</button>
+          </form>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <button class="btn btn-ghost btn-sm" onclick="navigate('landing')">← Về trang chủ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL: CREATE SESSION ==================== -->
+<div id="create-modal" class="modal-overlay hidden" onclick="if(event.target===this)closeCreateModal()">
+  <div class="modal">
+    <div class="modal-title">➕ Tạo phiên góp ý mới</div>
+    <div class="modal-desc">Tạo phiên thu thập góp ý ẩn danh. Có thể dùng cho tổ chức, nhóm, hoặc cá nhân muốn được đánh giá. Bạn sẽ nhận mã UID để chia sẻ.</div>
+    <form onsubmit="handleCreateSession(event)">
+      <div class="form-group">
+        <label class="form-label">Tiêu đề *</label>
+        <input class="form-input" id="cs-title" type="text" placeholder="VD: Khảo sát Q1/2026" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mô tả</label>
+        <textarea class="form-textarea" id="cs-desc" placeholder="Mô tả ngắn về mục đích..." rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Loại khảo sát</label>
+        <select class="form-select" id="cs-category">
+          <option value="general">📋 Góp ý chung</option>
+          <option value="personal">👤 Đánh giá cá nhân</option>
+          <option value="pulse">📊 Khảo sát định kỳ</option>
+          <option value="project">🎯 Đánh giá dự án / sự kiện</option>
+          <option value="team">👥 Đánh giá nhóm / đội</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button type="submit" class="btn btn-primary" style="flex:1">✅ Tạo phiên</button>
+        <button type="button" class="btn btn-secondary" onclick="closeCreateModal()">Hủy</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
